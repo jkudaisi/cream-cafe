@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jkudaisi.github.io/cream-cafe/sitemap.xml
