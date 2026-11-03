@@ -119,3 +119,8 @@ a{color:inherit}button{font:inherit;color:inherit}
 .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:760px){#cust .cupv{height:25svh;width:calc(25svh*.68)}}
 #cadd{white-space:nowrap;font-size:14px}
+.sec{content-visibility:auto;contain-intrinsic-size:auto 900px}
+.card{transition:transform .25s}.card:hover{box-shadow:none}
+.touch .card:hover{transform:none}
+.hero img.cup{will-change:transform}.touch .hero img.cup{filter:none}
+.sheet{will-change:auto}.sheet.on{will-change:transform}

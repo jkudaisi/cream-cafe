@@ -76,3 +76,12 @@ a{color:inherit}
 @media (max-width:760px){.big{top:26%}.hud{top:72px}}
 @media (max-width:760px) and (max-height:700px){.big{top:24%}}
 .fab{box-shadow:0 0 0 2px #f2ead9,0 10px 30px rgba(0,0,0,.25)}
+.stage{height:100vh;height:100lvh;contain:layout paint}
+.js .pan{will-change:auto}.big,.obj img{will-change:auto}
+.pinned .obj img,.pinned .big{will-change:transform}.pinned:not(.touch) .pan{will-change:clip-path}.pinned.touch .pan{will-change:transform}
+.touch .obj img{filter:none}
+.js.touch .pan:not(:first-child){clip-path:none;transform:translate3d(0,100%,0)}
+.static .pan{transform:none!important}
+.pill{transition:transform .2s}.touch .fab{box-shadow:0 0 0 2px #f2ead9}
+@media (max-width:760px){.copy{bottom:calc(100lvh - 100svh)}}
+.obj img{filter:none!important}

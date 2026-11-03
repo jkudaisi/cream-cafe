@@ -26,7 +26,7 @@ function renderLoc(){$$('.loc').forEach(b=>{const k=b.dataset.loc;b.setAttribute
 $$('.loc').forEach(b=>b.addEventListener('click',()=>{S.loc=b.dataset.loc;S.time='';save();renderLoc();renderCart()}));
 // ---------- tabs + search ----------
 const tabs=$$('.tabs a');tabs.forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const t=$(a.getAttribute('href'));scrollTo({top:t.getBoundingClientRect().top+scrollY-140,behavior:RM?'auto':'smooth'})}));
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){tabs.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)a.scrollIntoView({block:'nearest',inline:'center'})})}}),{rootMargin:'-160px 0px -60% 0px'});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){tabs.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on){const T=a.parentNode;T.scrollTo({left:a.offsetLeft-T.clientWidth/2+a.offsetWidth/2,behavior:RM?'auto':'smooth'})}})}}),{rootMargin:'-160px 0px -60% 0px'});
 $$('.sec').forEach(s=>io.observe(s));
 let st=0;$('#q').addEventListener('input',e=>{clearTimeout(st);st=setTimeout(()=>{const q=e.target.value.trim().toLowerCase();$$('.card').forEach(c=>c.classList.toggle('hidden',!!q&&!c.dataset.s.includes(q)));$$('.sec').forEach(s=>s.classList.toggle('hidden',!$$('.card:not(.hidden)',s).length));$('#noresults').classList.toggle('hidden',!!$$('.card:not(.hidden)').length)},120)});
 // ---------- customizer ----------
