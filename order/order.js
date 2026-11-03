@@ -36,48 +36,30 @@ const NAMEC=[[/matcha|green tea|halla|goddess/i,'#8fb25a'],[/chai|london/i,'#c08
 const MILK={'Whole Milk':'#f8f2e6','Skim Milk':'#f3f3ee','Half & Half':'#f4e6c6','Almond Milk':'#ecdcc0','Oat Milk':'#e9d5ad','Coconut Milk':'#fbf8f1'};
 const FLAV=[[/caramel|toffee|maple|brown sugar|cookie/i,'#c47a2c'],[/dark chocolate|mocha/i,'#4a2414'],[/white/i,'#f1e4c8'],[/vanilla|marshmallow|banana|cane/i,'#f0dca0'],[/rasp|straw|cherry|watermelon|hibiscus|guava/i,'#d0304a'],[/blue/i,'#2f7fd6'],[/apple|kiwi|pistachio/i,'#8bc34a'],[/lavender/i,'#a68ad4'],[/pumpkin|mango|pineapple|peach|pear|tiramisu/i,'#e08a3a']];
 const pick=(arr,s,d)=>{for(const [r,c] of arr)if(r.test(s))return c;return d};
-function cupSVG(){return `<div class="cupv" aria-hidden="true"><svg viewBox="0 0 200 300"><defs><clipPath id="cc"><path d="M34 62 L166 62 L150 290 Q100 298 50 290 Z"/></clipPath>
-<linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--milk)"/><stop offset=".75" stop-color="var(--milk)"/><stop offset="1" stop-color="var(--milk)" stop-opacity="0"/></linearGradient>
-<linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".25" stop-color="#fff" stop-opacity="0"/><stop offset=".8" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".25"/></linearGradient></defs>
-<g class="steam" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M80 40 q-10 -15 0 -30"/><path d="M100 36 q10 -15 0 -30"/><path d="M120 40 q-10 -15 0 -30"/></g>
-<g class="whip"><path d="M58 64 q-4 -22 20 -24 q6 -22 26 -16 q18 -10 28 10 q20 4 12 30 Z" fill="#fffaf0" stroke="#eadfcb" stroke-width="2"/></g>
-<g clip-path="url(#cc)"><rect width="200" height="300" fill="#fff" opacity=".18"/>
-<rect class="lyr liq" x="0" y="80" width="200" height="230" fill="var(--liq)"/>
-<rect class="lyr milk" x="0" y="80" width="200" height="0" fill="url(#mg)"/>
-<path class="drz" d="M40 90 Q60 150 48 200 Q44 240 60 285 M160 90 Q140 150 152 200 Q156 240 140 285 M100 86 Q110 140 96 190" fill="none" stroke="var(--syr)" stroke-width="7" stroke-linecap="round" opacity=".9"/>
-<g class="ice"></g>
-<rect class="foamc" x="0" y="66" width="200" height="34" fill="var(--foam,#f6ecd8)"/>
-<rect class="paper lyr" width="200" height="300" fill="#fbf7ef" opacity="0"/>
-<circle class="logo lyr" cx="100" cy="175" r="30" fill="#2f4636" opacity="0"/>
-</g>
-<path d="M34 62 L166 62 L150 290 Q100 298 50 290 Z" fill="url(#gl)" stroke="rgba(255,255,255,.7)" stroke-width="2.5"/>
-<g class="lid"><rect x="26" y="54" width="148" height="12" rx="6" fill="rgba(255,255,255,.55)" stroke="rgba(255,255,255,.8)"/></g>
-<rect class="straw" x="112" y="0" width="9" height="140" rx="3" fill="#1d1d1d" transform="rotate(8 116 70)"/>
-</svg></div>`}
-const ICE=[[50,110,-12],[96,104,18],[128,120,-6],[64,150,24],[112,160,-20],[80,196,10],[126,206,30],[58,236,-18]];
-function updateCup(){const v=$('.cupv',cust);if(!v||!cur)return;const it=cur.item,sk=it.sk[cur.sk]||['',0],nm=sk[0];
- const oz=+(nm.match(/(\d+)\s*oz/i)||[])[1]||16;const hot=/hot/i.test(nm)||(!/iced/i.test(nm)&&/hot|house blend|americano|espresso$|cappuccino|flat white|assorted hot/i.test(it.n)&&!/iced|cold/i.test(it.n));
- const sel=[];for(const [sid,set] of Object.entries(cur.ch))set.forEach(i=>sel.push([SETS[sid].n,SETS[sid].ch[i].n]));
- const milk=sel.find(([g,c])=>/milk/i.test(g)&&MILK[c]);const flav=sel.filter(([g,c])=>/flavor|drizzle/i.test(g+c)&&!/sugar|splenda/i.test(c));
- const foam=sel.find(([g,c])=>/cold foam/i.test(c)),whip=sel.find(([g,c])=>/^whip cream$/i.test(c)),noWhip=sel.find(([g,c])=>/no whipped/i.test(c));
- const ice=sel.find(([g,c])=>/ice options/i.test(g));
- v.classList.toggle('hot',hot);v.classList.toggle('syr',!!flav.length);v.classList.toggle('foam',!!foam);v.classList.toggle('whipd',!!whip||(/hot chocolate/i.test(it.n)&&!noWhip&&hot));
- const sc=Math.max(.78,Math.min(1.12,.8+(oz-12)*.035));$('svg',v).style.transform=`scale(${sc})`;
- v.style.setProperty('--liq',pick(NAMEC,it.n,BASE[it.c]||'#6b3d22'));v.style.setProperty('--milk',milk?MILK[milk[1]]:'transparent');
- v.style.setProperty('--syr',flav.length?pick(FLAV,flav[flav.length-1][1],'#c9762f'):'transparent');
- if(foam)v.style.setProperty('--foam',pick(FLAV,foam[1],'#f6ecd8')==='#c47a2c'?'#ecd2ae':(/straw/i.test(foam[1])?'#f7c9cf':/lavender/i.test(foam[1])?'#e4d6f2':/pumpkin/i.test(foam[1])?'#f1cfa4':'#f8efdc'));
- const fillTop=hot?72:90;const liq=$('.liq',v),mk=$('.milk',v);liq.setAttribute('y',fillTop);mk.setAttribute('y',fillTop);mk.setAttribute('height',milk?110:0);
- $('.paper',v).setAttribute('opacity',hot?1:0);$('.logo',v).setAttribute('opacity',hot?1:0);
- const n=hot?0:ice?(/extra/i.test(ice[1])?8:3):5;$('.ice',v).innerHTML=ICE.slice(0,n).map(([x,y,r])=>`<rect x="${x}" y="${y}" width="26" height="26" rx="5" fill="rgba(255,255,255,.55)" stroke="rgba(255,255,255,.9)" transform="rotate(${r} ${x+13} ${y+13})"/>`).join('');
+let cupP=null;const loadCup=()=>cupP||(cupP=new Promise(r=>{const t=document.createElement('script');t.src='cup.js';t.onload=r;document.head.appendChild(t)}));
+const friendly=n=>n.replace(/\s*(options?|choice)$/i,'').toLowerCase();
+function selList(){const out=[];for(const sid of cur.item.m){const set=cur.ch[sid];if(set)[...set].sort((a,b)=>a-b).forEach(i=>out.push([SETS[sid].n,SETS[sid].ch[i].n]))}return out}
+function updateCup(){if(!cur)return;const it=cur.item,sel=selList(),skn=(it.sk[cur.sk]||[''])[0];
+ const tags=$('.tags',cust);if(tags){const want=[...(it.sk.length>1?[skn]:[]),...sel.map(x=>x[1])];const have=[...tags.children].map(c=>c.textContent);
+  const lim=innerWidth<761?4:10,show=want.length>lim?[...want.slice(-lim),'+'+(want.length-lim)+' more']:want;if(show.join('|')!==have.join('|')){tags.innerHTML=show.map(w=>`<span${have.includes(w)||w[0]==='+'?'':' class="new"'}>${w}</span>`).join('')}}
+ if(cur.drink&&window.CUP)CUP.update(it,skn,sel);
+ if(!cur.drink){const im=$('.foodimg',cust);if(im){const t=sel.find(x=>/toast/i.test(x[0]));im.dataset.toast=t?(/extra/i.test(t[1])?'3':/normal/i.test(t[1])?'2':/light/i.test(t[1])?'1':'0'):'';const p=$('.photo',cust);if(p&&!RM&&sel.length+cur.sk!==cur._n){cur._n=sel.length+cur.sk;p.animate&&p.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:380})}}}
 }
 function unit(){const it=cur.item;let p=(it.sk[cur.sk]||[0,0])[1];for(const [sid,set] of Object.entries(cur.ch))set.forEach(i=>p+=SETS[sid].ch[i].p);return p}
 function valid(){return cur.item.m.every(sid=>(cur.ch[sid]?.size||0)>=SETS[sid].min)}
-function refresh(){$('#cprice').textContent=money(unit()*cur.qty);$('#cqty').textContent=cur.qty;const ok=valid();$('#cadd').disabled=!ok;$('#cadd').textContent=ok?'Add to order':'Pick required options';
- cur.item.m.forEach(sid=>{const r=$(`[data-req="${sid}"]`,cust);if(r)r.classList.toggle('hidden',(cur.ch[sid]?.size||0)>=SETS[sid].min)});updateCup()}
+function missing(){return cur.item.m.filter(sid=>(cur.ch[sid]?.size||0)<SETS[sid].min)}
+function refresh(){$('#cprice').textContent=money(unit()*cur.qty);$('#cqty').textContent=cur.qty;const miss=missing(),b=$('#cadd');
+ b.setAttribute('aria-disabled',miss.length?'true':'false');b.classList.toggle('need',!!miss.length);b.textContent=miss.length?'Choose '+friendly(SETS[miss[0]].n):'Add to order';
+ cur.item.m.forEach(sid=>{const f=$(`fieldset[data-set="${sid}"]`,cust),ok=(cur.ch[sid]?.size||0)>=SETS[sid].min;if(f){f.classList.toggle('missing',!ok);if(ok)f.classList.remove('shake');const r=$('.req',f);if(r)r.classList.toggle('hidden',ok)}});updateCup()}
+function goMissing(shake){const miss=missing();if(!miss.length)return false;const f=$(`fieldset[data-set="${miss[0]}"]`,cust);if(f){f.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});if(shake){f.classList.remove('shake');void f.offsetWidth;f.classList.add('shake')}}return true}
 function open(id,el){const it=ITEMS[id];if(!it)return;lastFocus=document.activeElement;cur={item:it,sk:0,ch:{},qty:1,el};
  const isDrink=DRINK.has(it.c);const img=it.im?`<img src="${it.im}" alt="${it.n}" width="400" height="400">`:'';
- $('.vis',cust).style.setProperty('--vb',isDrink?'#2f4636':'#c9762f');
- $('.vis',cust).innerHTML=`<div class="bigt">${isDrink?'BUILD':'FRESH'}</div>`+(isDrink?cupSVG():img||`<div class="bigt" style="color:rgba(255,255,255,.5)">${it.n.split(' ')[0]}</div>`);
+ const V=$('.vis',cust);V.style.setProperty('--vb',isDrink?'#2f4636':'#c9762f');cur.drink=isDrink;
+ const word=isDrink?(/iced|cold|spritz|lemonade/i.test(it.n+(it.sk[0]||[''])[0])?'ICED':it.c==='Health Bar'?'BLEND':it.c==='Energy Bar'?'SPRITZ':'BREW'):'FRESH';
+ V.innerHTML=`<div class="bigt">${word}</div>`;
+ if(isDrink){loadCup().then(()=>{if(cur&&cur.item===it){CUP.mount(V,it);updateCup()}})}
+ else V.insertAdjacentHTML('beforeend',`<div class="photo">${it.im?`<img class="foodimg" src="${it.im}" alt="${it.n}" width="400" height="400">`:`<div class="foodimg ill">${it.n.split(' ').slice(0,2).join(' ')}</div>`}</div><div class="tags" aria-live="polite"></div>`);
+ if(!isDrink&&!TOUCH&&!RM){const p=$('.photo',V);V.onpointermove=e=>{const r=V.getBoundingClientRect();p.style.transform=`rotateY(${((e.clientX-r.left)/r.width-.5)*16}deg) rotateX(${((e.clientY-r.top)/r.height-.5)*-12}deg)`};V.onpointerleave=()=>p.style.transform=''}
  let h=`<h2 id="ctitle">${it.n}</h2>${it.d?`<p class="desc">${it.d}</p>`:''}`;
  if(it.sk.length>1)h+=`<fieldset class="grp"><legend>${isDrink?'Size':'Choose'}<span class="req hidden"></span></legend><div class="chips">${it.sk.map((s,i)=>`<label class="chip"><input type="radio" name="sku" value="${i}" ${i?'':'checked'}><span>${s[0]} <em>${money(s[1])}</em></span></label>`).join('')}</div></fieldset>`;
  it.m.forEach(sid=>{const m=SETS[sid],radio=m.max===1,lim=m.max>1?`Up to ${m.max}`:m.max===0?'Choose any':'Choose 1';
@@ -87,7 +69,7 @@ function open(id,el){const it=ITEMS[id];if(!it)return;lastFocus=document.activeE
  $$('fieldset[data-set]',cust).forEach(f=>{const sid=f.dataset.set,m=SETS[sid];$$('input',f).forEach(inp=>inp.addEventListener('change',()=>{
   const s=cur.ch[sid]||(cur.ch[sid]=new Set()),i=+inp.value;if(inp.type==='radio'){s.clear();s.add(i)}else if(inp.checked){if(m.max>1&&s.size>=m.max){inp.checked=false;return}s.add(i)}else s.delete(i);refresh()}));
   const mb=$('.more',f);if(mb)mb.addEventListener('click',()=>{$$('.x12',f).forEach(x=>x.classList.remove('hidden'));mb.remove()})});
- cust.classList.add('on');scrim.classList.add('on');cust.setAttribute('aria-hidden','false');cust.inert=false;document.body.style.overflow='hidden';refresh();setTimeout(()=>$('.x',cust).focus(),50)}
+ cust.classList.add('on');scrim.classList.add('on');cust.setAttribute('aria-hidden','false');cust.inert=false;document.body.style.overflow='hidden';refresh();setTimeout(()=>{$('.x',cust).focus({preventScroll:true});goMissing(false)},420)}
 function closeAll(){[cust,$('#cart'),$('#chk')].forEach(s=>{s.classList.remove('on');s.setAttribute('aria-hidden','true');s.inert=true});scrim.classList.remove('on');document.body.style.overflow='';if(lastFocus&&lastFocus.focus)lastFocus.focus()}
 scrim.addEventListener('click',closeAll);$$('.sheet .x').forEach(b=>b.addEventListener('click',closeAll));addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
 $('#cminus').addEventListener('click',()=>{cur.qty=Math.max(1,cur.qty-1);refresh()});$('#cplus').addEventListener('click',()=>{cur.qty=Math.min(20,cur.qty+1);refresh()});
@@ -98,7 +80,7 @@ function fly(fromEl){if(RM||LITE||!fromEl)return;const src=$('img',fromEl);const
  const f=document.createElement(src?'img':'div');if(src)f.src=src.currentSrc||src.src;else f.style.background='#2f4636';f.className='fly';document.body.appendChild(f);
  const x0=r.left+r.width/2-35,y0=r.top+r.height/2-35,x1=t.left+t.width/2-35,y1=t.top+t.height/2-35;
  f.animate([{transform:`translate(${x0}px,${y0}px) scale(1)`,opacity:1},{transform:`translate(${(x0+x1)/2}px,${Math.min(y0,y1)-120}px) scale(.8)`,opacity:1,offset:.5},{transform:`translate(${x1}px,${y1}px) scale(.25)`,opacity:.6}],{duration:800,easing:'cubic-bezier(.5,0,.3,1)'}).onfinish=()=>{f.remove();cartBtn.classList.remove('bump');void cartBtn.offsetWidth;cartBtn.classList.add('bump')}}
-$('#cadd').addEventListener('click',()=>{if(!valid())return;const ch={};for(const [k,s] of Object.entries(cur.ch))if(s.size)ch[k]=[...s].sort((a,b)=>a-b);
+$('#cadd').addEventListener('click',()=>{if(goMissing(true))return;const ch={};for(const [k,s] of Object.entries(cur.ch))if(s.size)ch[k]=[...s].sort((a,b)=>a-b);
  const key=cur.item.id+'|'+cur.sk+'|'+JSON.stringify(ch);const ex=S.lines.find(l=>l.key===key);if(ex)ex.qty+=cur.qty;else S.lines.push({key,id:cur.item.id,sk:cur.sk,ch,qty:cur.qty});
  save();const el=cur.el;closeAll();renderCart();fly(el)});
 const lineUnit=l=>{const it=ITEMS[l.id];let p=(it.sk[l.sk]||[0,0])[1];for(const [k,a] of Object.entries(l.ch))a.forEach(i=>p+=(SETS[k]?.ch[i]?.p||0));return p};
